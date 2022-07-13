@@ -20,7 +20,7 @@ public class ReflectObjectReaderTest
     {
         var obj = CreateHoge();
 
-        var r = new ObjectReader(obj);
+        using var r = new ObjectReader(obj);
 
         AssertHoge(r, obj);
 
@@ -32,7 +32,7 @@ public class ReflectObjectReaderTest
     {
         var obj = new Fuga();
 
-        var r = new ObjectReader(obj);
+        using var r = new ObjectReader(obj);
 
         Assert.True(r.Read());
         Assert.Equal(EntryType.StartObject, r.Type);
@@ -58,7 +58,7 @@ public class ReflectObjectReaderTest
             Hoge = CreateHoge()
         };
 
-        var r = new ObjectReader(obj);
+        using var r = new ObjectReader(obj);
 
         Assert.True(r.Read());
         Assert.Equal(EntryType.StartObject, r.Type);
