@@ -11,13 +11,13 @@ internal abstract class PrimitiveValueReader : SerializationReader
 
     public ReaderState State { get; private set; }
 
-    public override object Value
+    public override object? Value
         => State == ReaderState.Reading ? InstanceValue : null;
 
     public override EntryType Type
         => State == ReaderState.Reading ? ValueType : EntryType.Unknown;
 
-    protected abstract object InstanceValue { get; }
+    protected abstract object? InstanceValue { get; }
 
     protected abstract EntryType ValueType { get; }
 

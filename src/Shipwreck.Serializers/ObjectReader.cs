@@ -13,7 +13,7 @@ public sealed class ObjectReader : SerializationReader
 
     public override EntryType Type => _InternalReader.Type;
 
-    public override object Value => _InternalReader.Value;
+    public override object? Value => _InternalReader.Value;
 
     public override bool Read() => _InternalReader.Read();
 

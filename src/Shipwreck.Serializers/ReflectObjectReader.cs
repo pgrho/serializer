@@ -6,7 +6,7 @@ internal sealed class ReflectObjectReader : SerializationReader
     private readonly object _Object;
     private int _PropertyIndex;
     private bool _ReadingPropertyValue;
-    private SerializationReader _ValueReader;
+    private SerializationReader? _ValueReader;
 
     public ReflectObjectReader(object obj)
     {
@@ -29,7 +29,7 @@ internal sealed class ReflectObjectReader : SerializationReader
                 {
                     return EntryType.Property;
                 }
-                return _ValueReader.Type;
+                return _ValueReader!.Type;
             }
             else if (_PropertyIndex == _Properties.Length)
             {
@@ -39,7 +39,7 @@ internal sealed class ReflectObjectReader : SerializationReader
         }
     }
 
-    public override object Value
+    public override object? Value
     {
         get
         {
@@ -49,7 +49,7 @@ internal sealed class ReflectObjectReader : SerializationReader
                 {
                     return _Properties[_PropertyIndex].Name;
                 }
-                return _ValueReader.Value;
+                return _ValueReader!.Value;
             }
             return null;
         }
