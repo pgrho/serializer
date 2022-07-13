@@ -1,4 +1,6 @@
-﻿using Shipwreck.Serializers.Primitive;
+﻿using System.Collections;
+
+using Shipwreck.Serializers.Primitive;
 
 namespace Shipwreck.Serializers;
 
@@ -22,7 +24,7 @@ public sealed class ObjectReader : SerializationReader
         switch (obj)
         {
             case null:
-                return NullReader.Default;
+                return new NullReader();
 
             case bool b:
                 return new BooleanReader(b);
@@ -65,6 +67,11 @@ public sealed class ObjectReader : SerializationReader
 
             case DateTimeOffset dto:
                 return new DateTimeOffsetReader(dto);
+        }
+
+        if (obj is IEnumerable en)
+        {
+            return new ReflectListReader((obj as IList) ?? en.Cast<object>().ToArray());
         }
 
         return new ReflectObjectReader(obj);

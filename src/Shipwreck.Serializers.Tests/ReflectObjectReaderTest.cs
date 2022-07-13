@@ -4,7 +4,7 @@ namespace Shipwreck.Serializers;
 
 public class ReflectObjectReaderTest
 {
-    public sealed class Hoge
+    private sealed class Hoge
     {
         [DefaultValue(false)]
         public bool Boolean { get; set; }
@@ -24,7 +24,7 @@ public class ReflectObjectReaderTest
             => !string.IsNullOrEmpty(String2);
     }
 
-    public sealed class Fuga
+    private sealed class Fuga
     {
         public Hoge? Hoge { get; set; }
     }
