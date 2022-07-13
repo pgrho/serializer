@@ -79,10 +79,13 @@ internal sealed class ReflectObjectReader : SerializationReader
                 return _PropertyIndex == _Properties.Length;
             }
 
-            _ReadingPropertyValue = false;
-            _ValueReader = ObjectReader.GetReader(p.Property.GetValue(_Object));
+            if (p.ShouldSerialize(_Object))
+            {
+                _ReadingPropertyValue = false;
+                _ValueReader = ObjectReader.GetReader(p.Property.GetValue(_Object));
 
-            return true;
+                return true;
+            }
         }
     }
 }
