@@ -12,7 +12,7 @@ internal sealed class ReflectObjectReader : SerializationReader
     {
         _Object = obj;
         _Properties = ReflectPropertyInfo.GetProperties(obj.GetType());
-        _PropertyIndex = -1;
+        _PropertyIndex = -2;
     }
 
     public override EntryType Type
@@ -81,6 +81,8 @@ internal sealed class ReflectObjectReader : SerializationReader
 
             _ReadingPropertyValue = false;
             _ValueReader = ObjectReader.GetReader(p.Property.GetValue(_Object));
+
+            return true;
         }
     }
 }
