@@ -2,6 +2,8 @@
 
 public enum EntryType
 {
+    Unknown,
+
     StartObject,
     EndObject,
     StartArray,
