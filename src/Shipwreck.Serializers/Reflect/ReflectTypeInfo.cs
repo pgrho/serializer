@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
 using System.Reflection;
 
 namespace Shipwreck.Serializers.Reflect;
@@ -27,6 +28,28 @@ internal sealed class ReflectTypeInfo
 
     public ReadOnlyCollection<ReflectPropertyInfo> Properties { get; }
 
+    #region ListElementType
+
+    private Type? _ListElementType;
+
+    public Type? ListElementType
+    {
+        get
+        {
+            if (_ListElementType == null)
+            {
+                _ListElementType = (typeof(IList).IsAssignableFrom(Type)
+                        ? Type.GetInterfaces().Concat(new[] { Type }).FirstOrDefault(e => e.IsConstructedGenericType && e.GetGenericTypeDefinition() == typeof(IEnumerable<>))?.GenericTypeArguments[0]
+                        : null)
+                    ?? typeof(void);
+            }
+            return _ListElementType == typeof(void) ? null : _ListElementType;
+        }
+    }
+
+    #endregion ListElementType
+
+    // TODO
     public ReflectPropertyInfo? GetProperty(string propertyName, StringComparison comparisonType = StringComparison.Ordinal)
         => Properties.FirstOrDefault(e => e.Name.Equals(propertyName, comparisonType));
 

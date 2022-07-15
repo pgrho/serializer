@@ -1,4 +1,6 @@
-﻿using Shipwreck.Serializers.Primitive;
+﻿using System.Collections;
+
+using Shipwreck.Serializers.Primitive;
 
 namespace Shipwreck.Serializers.Reflect;
 
@@ -11,6 +13,7 @@ internal sealed class ReflectObjectWriter : SerializationWriter
     private SerializationWriter? _PropertyWriter;
     private bool _CanWrite;
 
+    // TODO support current value
     public ReflectObjectWriter(Type expectedType)
     {
         _ExpectedType = ReflectTypeInfo.Get(expectedType);
@@ -114,7 +117,6 @@ internal sealed class ReflectObjectWriter : SerializationWriter
             || pt.IsEnum)
         {
         }
-        // TODO support list property
         else
         {
             _PropertyWriter = new ReflectObjectWriter(_Property.PropertyType);
