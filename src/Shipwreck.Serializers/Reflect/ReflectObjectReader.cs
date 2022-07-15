@@ -1,8 +1,8 @@
-﻿namespace Shipwreck.Serializers;
+﻿namespace Shipwreck.Serializers.Reflect;
 
 internal sealed class ReflectObjectReader : SerializationReader
 {
-    private readonly ReflectPropertyInfo[] _Properties;
+    private readonly ReflectTypeInfo _Type;
     private readonly object _Object;
     private int _PropertyIndex;
     private bool _ReadingPropertyValue;
@@ -11,7 +11,7 @@ internal sealed class ReflectObjectReader : SerializationReader
     public ReflectObjectReader(object obj)
     {
         _Object = obj;
-        _Properties = ReflectPropertyInfo.GetProperties(obj.GetType());
+        _Type = ReflectTypeInfo.Get(obj.GetType());
         _PropertyIndex = -2;
     }
 
@@ -23,7 +23,7 @@ internal sealed class ReflectObjectReader : SerializationReader
             {
                 return EntryType.StartObject;
             }
-            else if (_PropertyIndex < _Properties.Length)
+            else if (_PropertyIndex < _Type.Properties.Count)
             {
                 if (!_ReadingPropertyValue)
                 {
@@ -31,7 +31,7 @@ internal sealed class ReflectObjectReader : SerializationReader
                 }
                 return _ValueReader!.Type;
             }
-            else if (_PropertyIndex == _Properties.Length)
+            else if (_PropertyIndex == _Type.Properties.Count)
             {
                 return EntryType.EndObject;
             }
@@ -43,11 +43,11 @@ internal sealed class ReflectObjectReader : SerializationReader
     {
         get
         {
-            if (0 <= _PropertyIndex && _PropertyIndex < _Properties.Length)
+            if (0 <= _PropertyIndex && _PropertyIndex < _Type.Properties.Count)
             {
                 if (!_ReadingPropertyValue)
                 {
-                    return _Properties[_PropertyIndex].Name;
+                    return _Type.Properties[_PropertyIndex].Name;
                 }
                 return _ValueReader!.Value;
             }
@@ -71,12 +71,12 @@ internal sealed class ReflectObjectReader : SerializationReader
 
         for (; ; )
         {
-            var p = _Properties.ElementAtOrDefault(++_PropertyIndex);
+            var p = _Type.Properties.ElementAtOrDefault(++_PropertyIndex);
 
             if (p == null)
             {
                 _ValueReader = null;
-                return _PropertyIndex == _Properties.Length;
+                return _PropertyIndex == _Type.Properties.Count;
             }
 
             if (p.ShouldSerialize(_Object))

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 
 using Shipwreck.Serializers.Primitive;
+using Shipwreck.Serializers.Reflect;
 
 namespace Shipwreck.Serializers;
 
@@ -67,6 +68,11 @@ public sealed class ObjectReader : SerializationReader
 
             case DateTimeOffset dto:
                 return new DateTimeOffsetReader(dto);
+        }
+
+        if (obj is Enum fg)
+        {
+            return new Primitive.StringReader(fg.ToString("G"));
         }
 
         if (obj is IEnumerable en)

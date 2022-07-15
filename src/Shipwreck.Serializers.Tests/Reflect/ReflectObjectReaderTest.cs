@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Shipwreck.Serializers;
+namespace Shipwreck.Serializers.Reflect;
 
 public class ReflectObjectReaderTest
 {
@@ -47,7 +47,7 @@ public class ReflectObjectReaderTest
         var obj = CreateHoge();
         obj.String2 = "";
 
-        using var r = new ObjectReader(obj);
+        using var r = new ReflectObjectReader(obj);
 
         AssertHoge(r, obj);
 
@@ -60,7 +60,7 @@ public class ReflectObjectReaderTest
         var obj = CreateHoge();
         obj.String2 = "1234";
 
-        using var r = new ObjectReader(obj);
+        using var r = new ReflectObjectReader(obj);
 
         AssertHoge(r, obj);
 
@@ -72,7 +72,7 @@ public class ReflectObjectReaderTest
     {
         var obj = new Fuga();
 
-        using var r = new ObjectReader(obj);
+        using var r = new ReflectObjectReader(obj);
 
         Assert.True(r.Read());
         Assert.Equal(EntryType.StartObject, r.Type);
@@ -98,7 +98,7 @@ public class ReflectObjectReaderTest
             Hoge = CreateHoge()
         };
 
-        using var r = new ObjectReader(obj);
+        using var r = new ReflectObjectReader(obj);
 
         Assert.True(r.Read());
         Assert.Equal(EntryType.StartObject, r.Type);
@@ -125,7 +125,7 @@ public class ReflectObjectReaderTest
         };
     }
 
-    private static void AssertHoge(ObjectReader r, Hoge obj)
+    private static void AssertHoge(SerializationReader r, Hoge obj)
     {
         Assert.True(r.Read());
         Assert.Equal(EntryType.StartObject, r.Type);

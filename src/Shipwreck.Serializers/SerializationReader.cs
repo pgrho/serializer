@@ -14,7 +14,7 @@ public abstract class SerializationReader : IDisposable
         => IsDisposed = true;
 
     public void Dispose()
-    { 
+    {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

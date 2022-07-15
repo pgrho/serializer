@@ -1,27 +1,35 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace Shipwreck.Serializers;
+namespace Shipwreck.Serializers.Reflect;
 
 internal sealed class ReflectPropertyInfo
 {
     private static readonly Dictionary<Type, ReflectPropertyInfo[]> _Properties = new();
 
-    private ReflectPropertyInfo(PropertyInfo property)
+    public ReflectPropertyInfo(PropertyInfo property)
     {
         Property = property;
         var dva = Property.GetCustomAttribute<DefaultValueAttribute>();
         HasDefaultValue = dva != null;
         DefaultValue = dva?.Value;
 
+        IsNullableValueType = property.PropertyType.IsValueType && Nullable.GetUnderlyingType(property.PropertyType) != null;
+
         ShouldSerializeMethod = property.ReflectedType.GetMethod("ShouldSerialize" + Property.Name, BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
         if (ShouldSerializeMethod?.ReturnType != typeof(bool))
         {
             ShouldSerializeMethod = null;
         }
+
+        Converter = property.GetCustomAttribute<TypeConverterAttribute>()?.ConverterTypeName is string ctn
+                    && Activator.CreateInstance(Type.GetType(ctn)) is TypeConverter c
+                    ? c : TypeDescriptor.GetConverter(Property.PropertyType);
     }
 
     public PropertyInfo Property { get; }
+
+    public bool IsNullableValueType { get; }
 
     public MethodInfo? ShouldSerializeMethod { get; }
 
@@ -31,6 +39,8 @@ internal sealed class ReflectPropertyInfo
     public bool HasDefaultValue { get; }
 
     public object? DefaultValue { get; }
+
+    public TypeConverter Converter { get; }
 
     public bool ShouldSerialize(object obj)
         => (bool?)ShouldSerializeMethod?.Invoke(obj, Array.Empty<object>())

@@ -1,4 +1,4 @@
-﻿namespace Shipwreck.Serializers;
+﻿namespace Shipwreck.Serializers.Reflect;
 
 public class ReflectListReaderTest
 {
@@ -23,7 +23,7 @@ public class ReflectListReaderTest
             },
         };
 
-        using var r = ObjectReader.GetReader(ary);
+        using var r = new ReflectListReader(ary);
 
         Assert.True(r.Read());
         Assert.Equal(EntryType.StartArray, r.Type);

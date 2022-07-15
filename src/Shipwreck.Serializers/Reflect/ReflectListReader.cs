@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Shipwreck.Serializers;
+namespace Shipwreck.Serializers.Reflect;
 
 internal sealed class ReflectListReader : SerializationReader
 {
