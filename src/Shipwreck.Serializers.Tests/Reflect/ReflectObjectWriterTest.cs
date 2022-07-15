@@ -26,6 +26,10 @@ public class ReflectObjectWriterTest
 
         w.WriteStartObject();
 
+        w.WriteProperty("invalid");
+        w.WriteStartObject();
+        w.WriteEndObject();
+
         w.WriteProperty(nameof(expected.Boolean));
         w.WriteValue(expected.Boolean);
 

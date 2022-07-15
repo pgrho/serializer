@@ -1,4 +1,6 @@
-﻿namespace Shipwreck.Serializers.Reflect;
+﻿using Shipwreck.Serializers.Primitive;
+
+namespace Shipwreck.Serializers.Reflect;
 
 internal sealed class ReflectObjectWriter : SerializationWriter
 {
@@ -88,8 +90,8 @@ internal sealed class ReflectObjectWriter : SerializationWriter
 
         if (_Property == null)
         {
-            // TODO: ignore value
-            throw new InvalidOperationException();
+            _PropertyWriter = new EmptyWriter();
+            return;
         }
 
         var pt = _Property.PropertyType;
